@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+SQLAlchemy>=1.4,<2.1
+python-tds
+sqlalchemy-pytds
+pydantic
+python-dotenv
+pandas
+openpyxl
