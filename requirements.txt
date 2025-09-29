@@ -1,10 +1,13 @@
 fastapi
 uvicorn[standard]
-SQLAlchemy>=1.4,<2.1
-python-tds
-sqlalchemy-pytds
+sqlalchemy
 pydantic
 python-dotenv
+
+python-tds
+pyOpenSSL
+cryptography
+certifi
+
 pandas
 openpyxl
-certifi
