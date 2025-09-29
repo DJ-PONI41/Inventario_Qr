@@ -38,3 +38,25 @@ app.include_router(ubicaciones.router, prefix="/api", tags=["Ubicaciones"])
 app.include_router(inventario_ubicaciones.router, prefix="/api", tags=["Inventario Ubicaciones"])  
 app.include_router(lotes_rango.router)
 app.include_router(reportes.router)# 👈 nuevo
+
+
+
+
+from fastapi import FastAPI
+from sqlalchemy import text
+from .database import engine
+
+app = FastAPI()
+
+@app.get("/debug/driver")
+def driver():
+    return {
+        "dialect": str(engine.dialect.name),
+        "dbapi": getattr(engine.dialect.dbapi, "__name__", "unknown"),
+    }
+
+@app.get("/debug/db-ping")
+def db_ping():
+    with engine.connect() as conn:
+        row = conn.execute(text("SELECT DB_NAME() db, SUSER_SNAME() login")).mappings().first()
+    return {"db": row["db"], "login": row["login"]}
