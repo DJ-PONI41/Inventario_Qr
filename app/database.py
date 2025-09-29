@@ -1,5 +1,6 @@
 # app/database.py
 import os, urllib.parse
+import certifi
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
@@ -12,15 +13,16 @@ PORT   = int(os.getenv("AZURE_SQL_PORT", "1433"))
 USER_Q = urllib.parse.quote_plus(USER)
 PASS_Q = urllib.parse.quote_plus(PASS)
 
-# URL base sin flags de TLS
+# URL base (sin TLS en querystring)
 DATABASE_URL = f"mssql+pytds://{USER_Q}:{PASS_Q}@{SERVER}:{PORT}/{DB}"
 
-# >>> CLAVE: forzar TLS y validación de host <<<
+# Fuerza TLS con la CA de certifi y valida el hostname del certificado
 CONNECT_ARGS = {
-    "use_tls": True,
-    "validate_host": True,   # si diera error de certificado/host, prueba False temporalmente
+    "cafile": certifi.where(),
+    "validate_host": True,   # si diera error de hostname, pon temporalmente False
     "login_timeout": 30,
     "timeout": 30,
+    # "tds_version": "7.4",  # opcional; Azure soporta 7.4
 }
 
 engine = create_engine(
